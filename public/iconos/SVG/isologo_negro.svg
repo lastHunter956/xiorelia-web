@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_2" data-name="Capa 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57.62 20.8">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3 {
+        fill: #4a90e2;
+      }
+
+      .cls-4 {
+        fill: #2978b5;
+      }
+
+      .cls-5 {
+        fill: #1b3c73;
+      }
+
+      .cls-6, .cls-7 {
+        fill: #a5cfff;
+      }
+
+      .cls-7, .cls-2 {
+        letter-spacing: -.04em;
+      }
+
+      .cls-8 {
+        font-family: SourceSansRoman-Bold, 'Source Sans Variable';
+        font-size: 13px;
+        font-variation-settings: 'wght' 700;
+        font-weight: 700;
+      }
+
+      .cls-3 {
+        letter-spacing: -.05em;
+      }
+    </style>
+  </defs>
+  <g id="icono">
+    <g>
+      <g>
+        <g>
+          <g>
+            <circle class="cls-4" cx="3.74" cy="17.06" r="3.49"/>
+            <path class="cls-5" d="M8.34,11.98c.5.55.88,1.07,1.34,1.64-.85,1.16-1.59,2.38-2.21,3.63.03-1.05-.39-2.12-1.22-2.89-.81-.75-1.87-1.08-2.89-.99-.07,0-.14,0-.2.02,1.32-.79,2.59-1.72,3.77-2.78.44.43.99.91,1.41,1.37Z"/>
+          </g>
+          <g>
+            <circle class="cls-4" cx="15.98" cy="3.74" r="3.49"/>
+            <path class="cls-5" d="M16.48,7.44c-1.29.78-2.53,1.68-3.69,2.71-.44-.41-1.11-.94-1.51-1.37-.54-.58-.8-1.02-1.24-1.67.85-1.17,1.59-2.4,2.21-3.67,0,.05,0,.1,0,.15,0,.08,0,.17,0,.25,0,.08.01.15.02.23,0,.06.01.11.02.17.23,1.5,1.35,2.78,2.93,3.13.42.1.85.12,1.25.07Z"/>
+          </g>
+        </g>
+        <g>
+          <circle class="cls-6" cx="16.23" cy="17.31" r="3.49"/>
+          <circle class="cls-6" cx="3.49" cy="3.49" r="3.49"/>
+          <path class="cls-1" d="M16.82,13.63c-2-1.2-3.87-2.7-5.53-4.51s-3.03-3.82-4.07-5.93c0,.05,0,.1,0,.15,0,.08,0,.17,0,.25,0,.08,0,.15-.02.23,0,.06-.01.11-.02.17-.23,1.5-1.35,2.78-2.93,3.13-.42.09-.85.12-1.26.07,2,1.2,3.86,2.7,5.52,4.5s2.98,3.74,4.01,5.81c-.03-1.05.39-2.12,1.22-2.89s1.87-1.08,2.88-.99c.07,0,.13,0,.2.02Z"/>
+        </g>
+      </g>
+      <text class="cls-8" transform="translate(20.35 14.17)"><tspan class="cls-2" x="0" y="0">io</tspan><tspan class="cls-3" x="9.84" y="0">r</tspan><tspan class="cls-7" x="14.4" y="0">elia</tspan><tspan class="cls-2" x="33.37" y="0">.</tspan></text>
+    </g>
+  </g>
+</svg>
