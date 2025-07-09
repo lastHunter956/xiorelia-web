@@ -69,6 +69,20 @@ export async function POST(request: NextRequest) {
               <li>Te mantendremos actualizado sobre nuestro progreso</li>
             </ul>
           </div>
+
+          <div style="text-align: center; margin: 30px 0;">
+            <h3 style="color: #1e40af; margin-bottom: 15px;">🚀 ¡Completa tu Pre-inscripción!</h3>
+            <p style="color: #374151; margin-bottom: 20px;">
+              Para asegurar tu lugar en la lista de espera y recibir acceso prioritario, completa tu pre-inscripción:
+            </p>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfmNLxNk3Dsdyp4-rTwDpl8trqtcmpKrC-hPtRULlfLR3cvsw/viewform?usp=header" 
+               style="display: inline-block; background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%); color: white; text-decoration: none; padding: 15px 30px; border-radius: 50px; font-weight: bold; font-size: 16px; margin: 10px 0; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); transition: all 0.3s ease;">
+              ✨ Completar Pre-inscripción
+            </a>
+            <p style="color: #6b7280; font-size: 12px; margin-top: 10px;">
+              Solo toma 2 minutos y asegura tu acceso prioritario
+            </p>
+          </div>
           
           <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">
             Si tienes alguna pregunta, no dudes en contactarnos.
@@ -84,7 +98,12 @@ export async function POST(request: NextRequest) {
       attachments: [
         {
           filename: "isologo_blanco.png",
-          path: path.join(process.cwd(), "public", "iconos", "isologo_blanco.png"),
+          path: path.join(
+            process.cwd(),
+            "public",
+            "iconos",
+            "isologo_blanco.png"
+          ),
           cid: "xiorelia-logo",
         },
       ],
