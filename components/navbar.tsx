@@ -55,12 +55,63 @@ export default function Navbar() {
       }
     );
 
-    ["hero", "features", "demo", "waitlist"].forEach((id) => {
-      const element = document.getElementById(id);
-      if (element) observer.observe(element);
-    });
+    // Function to observe sections with retry logic for lazy-loaded content
+    const observeSections = () => {
+      const sectionsToObserve = ["hero", "features", "demo", "waitlist"];
 
-    return () => observer.disconnect();
+      sectionsToObserve.forEach((id) => {
+        const element = document.getElementById(id);
+        if (element) {
+          observer.observe(element);
+          console.log(`📍 Observing section: ${id}`);
+        } else {
+          console.log(`⏳ Section ${id} not yet available`);
+        }
+      });
+    };
+
+    // Initial observation
+    observeSections();
+
+    // Re-check for lazy-loaded sections periodically
+    const recheckInterval = setInterval(() => {
+      const unobservedSections = [
+        "hero",
+        "features",
+        "demo",
+        "waitlist",
+      ].filter((id) => {
+        const element = document.getElementById(id);
+        return (
+          element &&
+          !Array.from(document.querySelectorAll('[data-observed="true"]')).find(
+            (el) => el.id === id
+          )
+        );
+      });
+
+      if (unobservedSections.length > 0) {
+        unobservedSections.forEach((id) => {
+          const element = document.getElementById(id);
+          if (element) {
+            observer.observe(element);
+            element.setAttribute("data-observed", "true");
+            console.log(`📍 Late-observing section: ${id}`);
+          }
+        });
+      }
+    }, 1000);
+
+    // Cleanup after 10 seconds (should be enough for lazy loading)
+    const cleanupTimeout = setTimeout(() => {
+      clearInterval(recheckInterval);
+    }, 10000);
+
+    return () => {
+      observer.disconnect();
+      clearInterval(recheckInterval);
+      clearTimeout(cleanupTimeout);
+    };
   }, []);
 
   const navItems = [
@@ -69,9 +120,123 @@ export default function Navbar() {
     { key: "nav.waitlist", href: "#waitlist", id: "waitlist" },
   ];
 
+  // Pre-load function to trigger lazy loading before navigation
+  const preTriggerLazyLoading = (targetId: string) => {
+    if (targetId === "waitlist") {
+      // Force trigger the lazy loading by scrolling partially towards the section
+      const currentScroll = window.pageYOffset;
+      const documentHeight = document.documentElement.scrollHeight;
+      const windowHeight = window.innerHeight;
+
+      // Scroll to 70% of the page to trigger lazy loading without fully navigating
+      const preScrollPosition = Math.min(
+        documentHeight * 0.7,
+        documentHeight - windowHeight
+      );
+
+      // Only pre-scroll if we're not already near the bottom
+      if (currentScroll < preScrollPosition) {
+        window.scrollTo({
+          top: preScrollPosition,
+          behavior: "auto", // No smooth scroll for pre-loading
+        });
+
+        // Return to original position quickly
+        setTimeout(() => {
+          window.scrollTo({
+            top: currentScroll,
+            behavior: "auto",
+          });
+        }, 100);
+      }
+    }
+  };
+
   const handleNavigation = (href: string) => {
-    navigateToSection(href, { offset: -80, duration: 800 });
+    console.log("🚀 Navigation clicked:", href);
+
+    // Close mobile menu first
     setIsMobileMenuOpen(false);
+
+    // Remove # if present and clean the ID
+    const targetId = href.replace("#", "").trim();
+    console.log("🎯 Looking for element:", targetId);
+
+    // Pre-trigger lazy loading for problematic sections
+    preTriggerLazyLoading(targetId);
+
+    // Function to scroll to element
+    const scrollToElement = (element: HTMLElement) => {
+      const rect = element.getBoundingClientRect();
+      const currentScroll = window.pageYOffset;
+      const navbarOffset = 80;
+      const targetPosition = currentScroll + rect.top - navbarOffset;
+
+      window.scrollTo({
+        top: targetPosition,
+        behavior: "smooth",
+      });
+
+      setActiveSection(targetId);
+      console.log("✅ Successfully navigated to:", targetId);
+    };
+
+    // Function to attempt navigation with retry logic
+    const attemptNavigation = (retryCount = 0) => {
+      const targetElement = document.getElementById(targetId);
+
+      if (targetElement) {
+        console.log("✅ Element found! Scrolling...");
+        scrollToElement(targetElement);
+        return true;
+      }
+
+      // If element not found and we haven't exceeded max retries
+      if (retryCount < 5) {
+        console.log(
+          `⏳ Attempt ${retryCount + 1}: Waiting for component to load...`
+        );
+        setTimeout(
+          () => {
+            attemptNavigation(retryCount + 1);
+          },
+          retryCount === 0 ? 200 : 400 * retryCount
+        ); // Progressive delay
+        return false;
+      }
+
+      // Final fallback: force trigger lazy loading by scrolling to approximate position
+      console.log("🔄 Triggering lazy loading for:", targetId);
+      const sectionIndex = navItems.findIndex((item) => item.id === targetId);
+      if (sectionIndex !== -1) {
+        // Estimate position based on section order
+        const estimatedPosition = window.innerHeight * (sectionIndex + 1.5);
+        window.scrollTo({
+          top: estimatedPosition,
+          behavior: "smooth",
+        });
+
+        // Try again after scroll
+        setTimeout(() => {
+          const element = document.getElementById(targetId);
+          if (element) {
+            scrollToElement(element);
+          } else {
+            console.error("❌ Final attempt failed for:", targetId);
+          }
+        }, 1500);
+      }
+
+      return false;
+    };
+
+    // Start navigation attempt with a small delay to allow pre-loading
+    setTimeout(
+      () => {
+        attemptNavigation();
+      },
+      targetId === "waitlist" ? 300 : 0
+    );
   };
 
   return (

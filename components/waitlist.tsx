@@ -26,7 +26,7 @@ export default function Waitlist() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Verificar que Turnstile esté completado
     if (!isTurnstileVerified || !turnstileToken) {
       setError("Por favor, completa la verificación de seguridad.");
@@ -42,10 +42,10 @@ export default function Waitlist() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
-          name, 
-          email, 
-          turnstileToken 
+        body: JSON.stringify({
+          name,
+          email,
+          turnstileToken,
         }),
       });
 
@@ -82,13 +82,17 @@ export default function Waitlist() {
   const handleTurnstileError = () => {
     setTurnstileToken("");
     setIsTurnstileVerified(false);
-    setError("Error en la verificación de seguridad. Por favor, inténtalo de nuevo.");
+    setError(
+      "Error en la verificación de seguridad. Por favor, inténtalo de nuevo."
+    );
   };
 
   const handleTurnstileExpire = () => {
     setTurnstileToken("");
     setIsTurnstileVerified(false);
-    setError("La verificación de seguridad ha expirado. Por favor, complétala nuevamente.");
+    setError(
+      "La verificación de seguridad ha expirado. Por favor, complétala nuevamente."
+    );
   };
 
   return (
@@ -153,24 +157,23 @@ export default function Waitlist() {
               >
                 <div className="relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-2xl rounded-3xl border border-gray-200/30 dark:border-gray-700/30 shadow-2xl dark:shadow-blue-900/20 p-8 mx-4 sm:mx-0 overflow-hidden group-hover:shadow-3xl transition-all duration-500">
                   {/* Advanced Background Overlay */}
-                  <div className="absolute inset-0">
+                  <div className="absolute inset-0 pointer-events-none">
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-50/40 via-white/20 to-cyan-50/30 dark:from-blue-950/20 dark:via-gray-900/40 dark:to-purple-950/15 rounded-3xl"></div>
                     <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/5 to-white/20 dark:from-transparent dark:via-gray-900/10 dark:to-gray-800/20 rounded-3xl"></div>
                   </div>
 
                   {/* Sophisticated Border Effects */}
-                  <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-b from-white/60 via-white/20 to-transparent dark:from-gray-800/60 dark:via-gray-800/20 dark:to-transparent"></div>
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-cyan-500/0 dark:from-blue-400/0 dark:via-blue-400/10 dark:to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                  <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-b from-white/60 via-white/20 to-transparent dark:from-gray-800/60 dark:via-gray-800/20 dark:to-transparent pointer-events-none"></div>
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-cyan-500/0 dark:from-blue-400/0 dark:via-blue-400/10 dark:to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
 
                   {/* Micro-interactions: Floating Particles */}
-                  <div className="absolute top-4 right-4 w-1 h-1 bg-blue-400/60 rounded-full animate-pulse"></div>
-                  <div className="absolute top-8 right-8 w-0.5 h-0.5 bg-cyan-400/40 rounded-full animate-pulse delay-300"></div>
-                  <div className="absolute bottom-6 left-6 w-1 h-1 bg-purple-400/50 rounded-full animate-pulse delay-700"></div>
+                  <div className="absolute top-4 right-4 w-1 h-1 bg-blue-400/60 rounded-full animate-pulse pointer-events-none"></div>
+                  <div className="absolute top-8 right-8 w-0.5 h-0.5 bg-cyan-400/40 rounded-full animate-pulse delay-300 pointer-events-none"></div>
+                  <div className="absolute bottom-6 left-6 w-1 h-1 bg-purple-400/50 rounded-full animate-pulse delay-700 pointer-events-none"></div>
 
-                  <div className="relative z-10">
+                  <div className="relative z-20">
                     {/* Enhanced Form Header */}
                     <div className="text-center mb-8">
-                      
                       <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-white bg-clip-text text-transparent mb-3">
                         {t("waitlist.form.title")}
                       </h3>
@@ -182,15 +185,15 @@ export default function Waitlist() {
                     <form onSubmit={handleSubmit} className="space-y-6">
                       {/* Enhanced Name Input */}
                       <div className="relative group">
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 dark:from-blue-400/5 dark:to-cyan-400/5 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-all duration-300 blur-sm"></div>
-                        <div className="relative">
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 dark:from-blue-400/5 dark:to-cyan-400/5 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-all duration-300 blur-sm pointer-events-none"></div>
+                        <div className="relative z-10">
                           <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500 group-focus-within:text-blue-500 dark:group-focus-within:text-blue-400 transition-all duration-300 z-10" />
                           <Input
                             type="text"
                             placeholder={t("waitlist.form.name.placeholder")}
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="pl-12 h-14 bg-gray-50/80 dark:bg-gray-800/60 border-0 ring-1 ring-gray-200/60 dark:ring-gray-700/60 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-2xl focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 backdrop-blur-sm transition-all duration-300 text-base font-medium hover:ring-gray-300/80 dark:hover:ring-gray-600/80 focus:bg-white/90 dark:focus:bg-gray-800/80"
+                            className="pl-12 h-14 bg-gray-50/80 dark:bg-gray-800/60 border-0 ring-1 ring-gray-200/60 dark:ring-gray-700/60 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-2xl focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 backdrop-blur-sm transition-all duration-300 text-base font-medium hover:ring-gray-300/80 dark:hover:ring-gray-600/80 focus:bg-white/90 dark:focus:bg-gray-800/80 relative z-10"
                             required
                           />
                         </div>
@@ -198,54 +201,54 @@ export default function Waitlist() {
 
                       {/* Enhanced Email Input */}
                       <div className="relative group">
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 dark:from-blue-400/5 dark:to-cyan-400/5 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-all duration-300 blur-sm"></div>
-                        <div className="relative">
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 dark:from-blue-400/5 dark:to-cyan-400/5 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-all duration-300 blur-sm pointer-events-none"></div>
+                        <div className="relative z-10">
                           <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500 group-focus-within:text-blue-500 dark:group-focus-within:text-blue-400 transition-all duration-300 z-10" />
                           <Input
                             type="email"
                             placeholder={t("waitlist.form.email.placeholder")}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="pl-12 h-14 bg-gray-50/80 dark:bg-gray-800/60 border-0 ring-1 ring-gray-200/60 dark:ring-gray-700/60 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-2xl focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 backdrop-blur-sm transition-all duration-300 text-base font-medium hover:ring-gray-300/80 dark:hover:ring-gray-600/80 focus:bg-white/90 dark:focus:bg-gray-800/80"
+                            className="pl-12 h-14 bg-gray-50/80 dark:bg-gray-800/60 border-0 ring-1 ring-gray-200/60 dark:ring-gray-700/60 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-2xl focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 backdrop-blur-sm transition-all duration-300 text-base font-medium hover:ring-gray-300/80 dark:hover:ring-gray-600/80 focus:bg-white/90 dark:focus:bg-gray-800/80 relative z-10"
                             required
                           />
                         </div>
                       </div>
 
                       {/* Cloudflare Turnstile Widget */}
-                      <div className="relative group">
+                      <div className="relative">
                         <div className="flex flex-col items-center space-y-3">
-                          <div className="w-full flex justify-center">
-                            <div className="relative">
-                              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 dark:from-blue-400/5 dark:to-cyan-400/5 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-all duration-300 blur-sm"></div>
-                              
-                                <Turnstile
-                                  siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
-                                  onSuccess={handleTurnstileSuccess}
-                                  onError={handleTurnstileError}
-                                  onExpire={handleTurnstileExpire}
-                                  options={{
-                                    theme: theme === "dark" ? "dark" : "light",
-                                    language: language === "es" ? "es" : "en",
-                                    size: "normal",
-                                    action: "waitlist-signup",
-                                    cData: "waitlist-form"
-                                  }}
-                                />
-                              
-                            </div>
+                          {/* Contenedor del Turnstile con z-index alto */}
+                          <div className="relative z-50 bg-transparent">
+                            <Turnstile
+                              siteKey={
+                                process.env
+                                  .NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY ||
+                                "1x00000000000000000000AA"
+                              }
+                              onSuccess={handleTurnstileSuccess}
+                              onError={handleTurnstileError}
+                              onExpire={handleTurnstileExpire}
+                              options={{
+                                theme: theme === "dark" ? "dark" : "light",
+                                language: language === "es" ? "es" : "en",
+                                size: "normal",
+                                action: "waitlist-signup",
+                                cData: "waitlist-form",
+                              }}
+                            />
                           </div>
-                          
+
                           {/* Indicador de verificación */}
                           {isTurnstileVerified && (
                             <motion.div
                               initial={{ opacity: 0, scale: 0.9 }}
                               animate={{ opacity: 1, scale: 1 }}
-                              className="flex items-center gap-2 text-green-600 dark:text-green-400 bg-green-50/60 dark:bg-green-900/20 px-3 py-1.5 rounded-full border border-green-200/40 dark:border-green-800/40 backdrop-blur-sm"
+                              className="flex items-center gap-2 text-green-600 dark:text-green-400 bg-green-50/60 dark:bg-green-900/20 px-3 py-1.5 rounded-full border border-green-200/40 dark:border-green-800/40 backdrop-blur-sm relative z-10"
                             >
                               <Check className="h-4 w-4" />
                               <span className="text-sm font-medium">
-                                Verificación completada
+                                {t("waitlist.form.turnstile.success")}
                               </span>
                             </motion.div>
                           )}
@@ -259,8 +262,8 @@ export default function Waitlist() {
                           type="submit"
                           disabled={isLoading || !isTurnstileVerified}
                           className={`relative w-full h-14 ${
-                            !isTurnstileVerified 
-                              ? "bg-gray-400 dark:bg-gray-600 cursor-not-allowed" 
+                            !isTurnstileVerified
+                              ? "bg-gray-400 dark:bg-gray-600 cursor-not-allowed"
                               : "bg-gradient-to-r from-blue-600 via-blue-700 to-cyan-600 hover:from-blue-700 hover:via-blue-800 hover:to-cyan-700 dark:from-blue-500 dark:via-blue-600 dark:to-cyan-500 dark:hover:from-blue-600 dark:hover:via-blue-700 dark:hover:to-cyan-600"
                           } disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-2xl shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 dark:shadow-blue-500/20 dark:hover:shadow-blue-500/30 transition-all duration-500 text-base overflow-hidden group`}
                         >

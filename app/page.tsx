@@ -6,7 +6,6 @@ import LazySection from "@/components/optimized/lazy-section";
 // Lazy load heavy components
 const Features = lazy(() => import("@/components/features"));
 const AppDemo = lazy(() => import("@/components/app-demo"));
-const Testimonials = lazy(() => import("@/components/testimonials"));
 const Waitlist = lazy(() => import("@/components/waitlist"));
 
 // Loading fallbacks
@@ -50,6 +49,8 @@ export default function Home() {
       >
         <AppDemo />
       </LazySection>
+
+    
 
       <LazySection
         fallback={<SectionSkeleton />}

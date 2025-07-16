@@ -245,8 +245,8 @@ export default function Hero() {
               className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-xl font-medium"
             >
               {language === "en"
-                ? "Designed for entrepreneurs and investors aged 20 to 40 years."
-                : "Diseñado para emprendedores e inversionistas de 20 a 40 años."}
+                ? "Designed for entrepreneurs looking to take their business to the next level."
+                : "Diseñada para emprendedores que buscan llevar su negocio al siguiente nivel."}
             </motion.p>
 
             {/* CTA Button */}

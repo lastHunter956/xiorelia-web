@@ -18,6 +18,7 @@ const translations = {
     "nav.demo": "Demo",
     "nav.testimonials": "Testimonios",
     "nav.waitlist": "Lista de Espera",
+    "waitlist.form.turnstile.success": "Verificación completada con éxito",
 
     // Hero Section
     "hero.badge": "IA Avanzada",
@@ -79,6 +80,10 @@ const translations = {
     "demo.calls": "Llamadas",
     "demo.schedule": "Horario",
     "demo.settings": "Configuración",
+    "demo.item1.scheduled": "Reunión con equipo",
+    "demo.item2.scheduled": "Presentación cliente",
+    "demo.item3.scheduled": "Revisión semanal",
+    "demo.item4.scheduled": "Entrevista candidato",
     "demo.calls.handled": "Llamadas Atendidas",
     "demo.meetings.scheduled": "Reuniones Programadas",
     "demo.satisfaction.rate": "Tasa de Satisfacción",
@@ -263,6 +268,14 @@ const translations = {
     "demo.settings.recording": "Grabación",
     "demo.settings.notifications": "Notificaciones",
     "demo.settings.save": "Guardar Cambios",
+    "demo.settings.voice_professional": "Profesional",
+    "demo.settings.voice_friendly": "Amigable",
+    "demo.settings.voice_formal": "Formal",
+    "demo.settings.enabled": "Activado",
+    "demo.settings.lang_spanish": "Español",
+    "demo.settings.lang_english": "Inglés",
+    "demo.settings.lang_french": "Francés",
+    "demo.people": "Personas",
   },
   en: {
     // Navigation
@@ -271,7 +284,7 @@ const translations = {
     "nav.demo": "Demo",
     "nav.testimonials": "Testimonials",
     "nav.waitlist": "Waitlist",
-
+    "waitlist.form.turnstile.success": "Verification completed successfully",
     // Hero Section
     "hero.badge": "Advanced AI",
     "hero.title": "Meet Xiorelia",
@@ -325,12 +338,17 @@ const translations = {
 
     // App Demo Section
     "demo.title": "See Xiorelia in Action",
+    "demo.people": "People",
     "demo.subtitle":
       "Experience the intuitive interface that makes managing your AI assistant effortless",
     "demo.cta": "Watch Full Demo",
     "demo.dashboard": "Dashboard",
     "demo.calls": "Calls",
     "demo.schedule": "Schedule",
+    "demo.item1.scheduled": "Meeting with team",
+    "demo.item2.scheduled": "Client presentation",
+    "demo.item3.scheduled": "Weekly review",
+    "demo.item4.scheduled": "Candidate interview",
     "demo.settings": "Settings",
     "demo.calls.handled": "Calls Handled",
     "demo.meetings.scheduled": "Meetings Scheduled",
@@ -509,6 +527,13 @@ const translations = {
     "demo.settings.recording": "Recording",
     "demo.settings.notifications": "Notifications",
     "demo.settings.save": "Save Changes",
+    "demo.settings.voice_professional": "Professional",
+    "demo.settings.voice_friendly": "Friendly",
+    "demo.settings.voice_formal": "Formal",
+    "demo.settings.enabled": "Enabled",
+    "demo.settings.lang_spanish": "Spanish",
+    "demo.settings.lang_english": "English",
+    "demo.settings.lang_french": "French",
   },
 };
 

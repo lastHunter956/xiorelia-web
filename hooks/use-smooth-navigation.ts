@@ -1,45 +1,57 @@
-"use client"
+"use client";
 
-import { useCallback } from "react"
-import { smoothScrollTo, smartSmoothScroll } from "@/utils/smooth-scroll"
+import { useCallback } from "react";
 
 interface NavigationOptions {
-  offset?: number
-  duration?: number
-  onComplete?: () => void
+  offset?: number;
+  duration?: number;
+  onComplete?: () => void;
 }
 
 export function useSmoothNavigation() {
-  const navigateToSection = useCallback((sectionId: string, options: NavigationOptions = {}) => {
-    const { offset = -100, duration, onComplete } = options
+  const navigateToSection = useCallback(
+    (sectionId: string, options: NavigationOptions = {}) => {
+      const { offset = -100, onComplete } = options;
 
-    // Add visual feedback
-    const targetElement = document.querySelector(sectionId)
-    if (targetElement) {
-      // Add a subtle highlight effect
-      targetElement.classList.add("navigation-target")
-      setTimeout(() => {
-        targetElement.classList.remove("navigation-target")
-      }, 1000)
-    }
+      // Ensure sectionId starts with #
+      const targetSelector = sectionId.startsWith("#")
+        ? sectionId
+        : `#${sectionId}`;
 
-    smartSmoothScroll(sectionId, {
-      offset,
-      duration,
-      callback: onComplete,
-    })
-  }, [])
+      // Find the target element
+      const targetElement = document.querySelector(targetSelector);
+      if (targetElement) {
+        // Get the element's position
+        const elementTop = targetElement.getBoundingClientRect().top;
+        const currentScroll = window.pageYOffset;
+        const targetPosition = currentScroll + elementTop + offset;
 
-  const navigateToTop = useCallback((duration = 1000) => {
-    smoothScrollTo(document.body, {
-      duration,
-      easing: "easeOutQuart",
-      offset: 0,
-    })
-  }, [])
+        // Use native smooth scroll - fast and reliable
+        window.scrollTo({
+          top: targetPosition,
+          behavior: "smooth",
+        });
+
+        // Call completion callback after a short delay
+        if (onComplete) {
+          setTimeout(onComplete, 500);
+        }
+      } else {
+        console.warn(`Target element not found: ${targetSelector}`);
+      }
+    },
+    []
+  );
+
+  const navigateToTop = useCallback(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
 
   return {
     navigateToSection,
     navigateToTop,
-  }
+  };
 }
