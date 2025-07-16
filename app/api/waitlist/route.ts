@@ -2,9 +2,34 @@ import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import path from "path";
 
+// Función para verificar el token de Turnstile
+async function verifyTurnstileToken(token: string): Promise<boolean> {
+  try {
+    const response = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          secret: process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY || "",
+          response: token,
+        }),
+      }
+    );
+
+    const data = await response.json();
+    return data.success === true;
+  } catch (error) {
+    console.error("Error verifying Turnstile token:", error);
+    return false;
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { name, email } = await request.json();
+    const { name, email, turnstileToken } = await request.json();
 
     // Validar los datos recibidos
     if (!name || !email) {
@@ -14,9 +39,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validar el token de Turnstile
+    if (!turnstileToken) {
+      return NextResponse.json(
+        { error: "La verificación de seguridad es requerida" },
+        { status: 400 }
+      );
+    }
+
+    const isTurnstileValid = await verifyTurnstileToken(turnstileToken);
+    if (!isTurnstileValid) {
+      return NextResponse.json(
+        {
+          error:
+            "Verificación de seguridad inválida. Por favor, inténtalo de nuevo.",
+        },
+        { status: 400 }
+      );
+    }
+
     // Configurar el transporter de nodemailer
     const transporter = nodemailer.createTransport({
-      service: "gmail", // Puedes cambiar esto por otro proveedor
+      service: "zoho", // Puedes cambiar esto por otro proveedor
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,

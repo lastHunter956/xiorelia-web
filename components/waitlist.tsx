@@ -9,6 +9,7 @@ import { useTheme } from "@/contexts/theme-context";
 import { Input } from "@/components/ui/input";
 import { useState, useRef } from "react";
 import { useLanguage } from "@/contexts/language-context";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 export default function Waitlist() {
   const { t, language } = useLanguage();
@@ -18,11 +19,20 @@ export default function Waitlist() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [isTurnstileVerified, setIsTurnstileVerified] = useState(false);
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true, amount: 0.3 });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Verificar que Turnstile esté completado
+    if (!isTurnstileVerified || !turnstileToken) {
+      setError("Por favor, completa la verificación de seguridad.");
+      return;
+    }
+
     setIsLoading(true);
     setError("");
 
@@ -32,7 +42,11 @@ export default function Waitlist() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email }),
+        body: JSON.stringify({ 
+          name, 
+          email, 
+          turnstileToken 
+        }),
       });
 
       if (!response.ok) {
@@ -45,6 +59,8 @@ export default function Waitlist() {
         setIsSubmitted(true);
         setName("");
         setEmail("");
+        setTurnstileToken("");
+        setIsTurnstileVerified(false);
         setTimeout(() => setIsSubmitted(false), 4000);
       } else {
         throw new Error(data.error || "Error al enviar el formulario");
@@ -54,6 +70,25 @@ export default function Waitlist() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Funciones para manejar Turnstile
+  const handleTurnstileSuccess = (token: string) => {
+    setTurnstileToken(token);
+    setIsTurnstileVerified(true);
+    setError(""); // Limpiar cualquier error previo
+  };
+
+  const handleTurnstileError = () => {
+    setTurnstileToken("");
+    setIsTurnstileVerified(false);
+    setError("Error en la verificación de seguridad. Por favor, inténtalo de nuevo.");
+  };
+
+  const handleTurnstileExpire = () => {
+    setTurnstileToken("");
+    setIsTurnstileVerified(false);
+    setError("La verificación de seguridad ha expirado. Por favor, complétala nuevamente.");
   };
 
   return (
@@ -177,13 +212,57 @@ export default function Waitlist() {
                         </div>
                       </div>
 
+                      {/* Cloudflare Turnstile Widget */}
+                      <div className="relative group">
+                        <div className="flex flex-col items-center space-y-3">
+                          <div className="w-full flex justify-center">
+                            <div className="relative">
+                              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 dark:from-blue-400/5 dark:to-cyan-400/5 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-all duration-300 blur-sm"></div>
+                              
+                                <Turnstile
+                                  siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
+                                  onSuccess={handleTurnstileSuccess}
+                                  onError={handleTurnstileError}
+                                  onExpire={handleTurnstileExpire}
+                                  options={{
+                                    theme: theme === "dark" ? "dark" : "light",
+                                    language: language === "es" ? "es" : "en",
+                                    size: "normal",
+                                    action: "waitlist-signup",
+                                    cData: "waitlist-form"
+                                  }}
+                                />
+                              
+                            </div>
+                          </div>
+                          
+                          {/* Indicador de verificación */}
+                          {isTurnstileVerified && (
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              className="flex items-center gap-2 text-green-600 dark:text-green-400 bg-green-50/60 dark:bg-green-900/20 px-3 py-1.5 rounded-full border border-green-200/40 dark:border-green-800/40 backdrop-blur-sm"
+                            >
+                              <Check className="h-4 w-4" />
+                              <span className="text-sm font-medium">
+                                Verificación completada
+                              </span>
+                            </motion.div>
+                          )}
+                        </div>
+                      </div>
+
                       {/* Premium Submit Button */}
                       <div className="relative group pt-2">
                         <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-blue-700 to-cyan-600 dark:from-blue-500 dark:via-blue-600 dark:to-cyan-500 rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-xl"></div>
                         <Button
                           type="submit"
-                          disabled={isLoading}
-                          className="relative w-full h-14 bg-gradient-to-r from-blue-600 via-blue-700 to-cyan-600 hover:from-blue-700 hover:via-blue-800 hover:to-cyan-700 dark:from-blue-500 dark:via-blue-600 dark:to-cyan-500 dark:hover:from-blue-600 dark:hover:via-blue-700 dark:hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-2xl shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 dark:shadow-blue-500/20 dark:hover:shadow-blue-500/30 transition-all duration-500 text-base overflow-hidden group"
+                          disabled={isLoading || !isTurnstileVerified}
+                          className={`relative w-full h-14 ${
+                            !isTurnstileVerified 
+                              ? "bg-gray-400 dark:bg-gray-600 cursor-not-allowed" 
+                              : "bg-gradient-to-r from-blue-600 via-blue-700 to-cyan-600 hover:from-blue-700 hover:via-blue-800 hover:to-cyan-700 dark:from-blue-500 dark:via-blue-600 dark:to-cyan-500 dark:hover:from-blue-600 dark:hover:via-blue-700 dark:hover:to-cyan-600"
+                          } disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-2xl shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 dark:shadow-blue-500/20 dark:hover:shadow-blue-500/30 transition-all duration-500 text-base overflow-hidden group`}
                         >
                           <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                           <span className="relative flex items-center justify-center gap-3">
@@ -194,8 +273,10 @@ export default function Waitlist() {
                             )}
                             {isLoading
                               ? "Enviando..."
+                              : !isTurnstileVerified
+                              ? "Completa la verificación"
                               : t("waitlist.form.button")}
-                            {!isLoading && (
+                            {!isLoading && isTurnstileVerified && (
                               <motion.div
                                 animate={{ x: [0, 4, 0] }}
                                 transition={{
